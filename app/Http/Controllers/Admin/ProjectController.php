@@ -6,9 +6,11 @@ use App\Models\Project;
 use App\Models\Type;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Technology;
 use GuzzleHttp\Handler\Proxy;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 
 
@@ -31,7 +33,8 @@ class ProjectController extends Controller
     {
         $project = new Project();
         $types = Type::all();
-        return view('admin.projects.create', compact('project', 'types'));
+        $technologies = Technology::all();
+        return view('admin.projects.create', compact('project', 'technologies', 'types'));
     }
 
     /**
@@ -44,7 +47,8 @@ class ProjectController extends Controller
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg, jpg, png',
             'github' => 'nullable|url',
-            'type_id' => 'nullable|exists:type,id'
+            'type_id' => 'nullable|exists:type,id',
+            'techs' => 'nullable|exists:tech,id'
 
 
         ], [
@@ -58,7 +62,8 @@ class ProjectController extends Controller
             'image.image' => 'L\' immagine deve essere un file immagine',
             'image.mimes' => 'L\' immagine deve avere come estensioni jpeg, jpg, png',
             'github.url' => 'Il link github deve essere corretto',
-            'type_id' => 'Tupo non valido'
+            'type_id' => 'Tipo non valido',
+            'techs' => 'Le tech selezionati non sono validi.'
 
         ]);
         $data = $request->all();
@@ -71,7 +76,9 @@ class ProjectController extends Controller
 
         $project->slug = Str::slug($project->title, '-');
         $project->save();
-        dd($request->all());
+
+        if (Arr::exists($data, 'technologies')) $project->technologies()->attach($data['technologies']);
+        $project->technologies()->attach($data['technologies']);
         return to_route('admin.projects.show', $project->id)->with('type', 'success')->with('msg', "Il project '$project->title' è stato creato con successo.");
     }
 
@@ -89,7 +96,8 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $types = Type::all();
-        return view('admin.projects.edit', compact('project', 'types'));
+        $technologies = Technology::all();
+        return view('admin.projects.edit', compact('project', 'technologies', 'types'));
     }
 
     /**
@@ -101,7 +109,8 @@ class ProjectController extends Controller
             'title' => ['required', 'string', Rule::unique('projects')->ignore($project->id), 'min:2', 'max:100'],
             'description' => ['required', 'string'],
             'image' => ['nullable', 'image|mimes:jpeg, jpg, png'],
-            'github' => ['nullable', 'url']
+            'github' => ['nullable', 'url'],
+            'techs' => 'nullable|exists:tech,id'
 
         ], [
             'title.required' => 'Il titolo è necessario',
@@ -114,6 +123,7 @@ class ProjectController extends Controller
             'image.image' => 'L\' immagine deve essere un file immagine',
             'image.mimes' => 'L\' immagine deve avere come estensioni jpeg, jpg, png',
             'github.url' => 'Il link github deve essere corretto',
+            'techs' => 'Le tech selezionati non sono validi.'
 
         ]);
         $data = $request->all();
@@ -123,6 +133,7 @@ class ProjectController extends Controller
             $img_url = Storage::put('projects', $data['image']);
             $data['image'] = $img_url;
         }
+
         $project->update($data);
         return to_route('admin.projects.show', $project->id)->with('type', 'success')->with('msg', "Il project '$project->title' è stato aggiornato con successo.");
     }

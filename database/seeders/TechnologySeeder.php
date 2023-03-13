@@ -23,10 +23,10 @@ class TechnologySeeder extends Seeder
             ['name' => 'SQL'],
             ['name' => 'LARAVEL']
         ];
-        foreach ($technologies as $tech) {
-            $new_tech = new Technology();
-            $new_tech->name = $tech['name'];
-            $new_tech->save();
+        foreach ($technologies as $technology) {
+            $new_technology = new Technology();
+            $new_technology->name = $technology['name'];
+            $new_technology->save();
         }
     }
 }

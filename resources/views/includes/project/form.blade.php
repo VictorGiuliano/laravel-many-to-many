@@ -46,6 +46,21 @@
                         <option @if($project->type_id == $type->id) selected @endif value="{{$type->id}}">{{$type->name}}</option>
                         @endforeach
                     </select>
+                </div>
+                {{-- Tech --}}
+            <div class="col-8">
+                <div class="mb-3">
+                    <h3>Tech</h3>
+                    @foreach($technologies as $technology)
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="tech-{{$technology->id}}" value="{{$technology->id}}" name="techs[]"
+                        @if(in_array($technology->id, old('technologies', []))) checked @endif>
+                        <label class="form-check-label" for="tech-{{$technology->id}}">{{$technology->name}}</label>
+                    </div>    
+                    @endforeach
+                    @error('technologies')
+                        <small class="text-danger">{{$message}}</small>
+                    @enderror
             {{-- Description --}}
             <div class="col-12">
                 <div class="mb-3">
