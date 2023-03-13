@@ -1,0 +1,35 @@
+.bkg-b {
+    min-height: 100px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+h4 {
+
+    font-size: 11px;
+    padding: 15px 0;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+
+    .project-card {
+        flex-basis: calc(100% / 6);
+        padding: 15px;
+
+        img {
+            display: block;
+
+            height: auto;
+            max-width: 100%;
+        }
+
+        small {
+            width: 43px;
+
+        }
+    }
+}
