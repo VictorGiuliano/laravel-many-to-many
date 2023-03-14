@@ -16,7 +16,7 @@
 <div><time><strong>Creato il: </strong>{{$project->created_at}}</time></div>
 <div><time><strong>Ultima modifica il:</strong> {{$project->updated_at}}</time></div>
 <div><strong>Type:</strong> {{$project->type?->name}}</div>
-
+<div><strong>Tech:</strong> @forelse($project->technologies as $technology) {{$technology->name}}@if(!$loop->last),@endif @empty No Tech @endforelse</div>
 <hr>
 <div class="container d-flex pt-3 justify-content-start">
     <a href="{{$project->github}}" class="btn mx-1 sm btn-primary">Vai al sito <i class="fa-brands fa-github"></i></a>
