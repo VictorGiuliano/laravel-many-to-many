@@ -47,8 +47,8 @@ class ProjectController extends Controller
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg, jpg, png',
             'github' => 'nullable|url',
-            'type_id' => 'nullable|exists:type,id',
-            'techs' => 'nullable|exists:tech,id'
+            'types_id' => 'nullable|exists:types,id',
+            'technologies' => 'nullable|exists:technologies,id'
 
 
         ], [
@@ -62,8 +62,8 @@ class ProjectController extends Controller
             'image.image' => 'L\' immagine deve essere un file immagine',
             'image.mimes' => 'L\' immagine deve avere come estensioni jpeg, jpg, png',
             'github.url' => 'Il link github deve essere corretto',
-            'type_id' => 'Tipo non valido',
-            'techs' => 'Le tech selezionati non sono validi.'
+            'types_id' => 'Tipo non valido',
+            'technologies' => 'Le technologies selezionate non sono valide.'
 
         ]);
         $data = $request->all();
