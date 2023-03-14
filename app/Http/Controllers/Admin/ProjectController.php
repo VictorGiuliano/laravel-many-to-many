@@ -135,6 +135,8 @@ class ProjectController extends Controller
         }
 
         $project->update($data);
+        if (Arr::exists($data, 'technologies')) $project->technologies()->sync($data['technologies']);
+        else $project->technologies()->detach();
         return to_route('admin.projects.show', $project->id)->with('type', 'success')->with('msg', "Il project '$project->title' è stato aggiornato con successo.");
     }
 
