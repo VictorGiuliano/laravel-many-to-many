@@ -49,8 +49,6 @@ class ProjectController extends Controller
             'github' => 'nullable|url',
             'types_id' => 'nullable|exists:types,id',
             'technologies' => 'nullable|exists:technologies,id'
-
-
         ], [
             'title.required' => 'Il titolo è necessario',
             'title.string' => 'Il titolo deve essere una stringa',
@@ -62,7 +60,7 @@ class ProjectController extends Controller
             'image.image' => 'L\' immagine deve essere un file immagine',
             'image.mimes' => 'L\' immagine deve avere come estensioni jpeg, jpg, png',
             'github.url' => 'Il link github deve essere corretto',
-            'types_id' => 'Tipo non valido',
+            'type_id' => 'Tipo non valido',
             'technologies' => 'Le technologies selezionate non sono valide.'
 
         ]);
@@ -78,7 +76,7 @@ class ProjectController extends Controller
         $project->save();
 
         if (Arr::exists($data, 'technologies')) $project->technologies()->attach($data['technologies']);
-        $project->technologies()->attach($data['technologies']);
+        //$project->technologies()->attach($data['technologies']);
         return to_route('admin.projects.show', $project->id)->with('type', 'success')->with('msg', "Il project '$project->title' è stato creato con successo.");
     }
 
@@ -97,7 +95,9 @@ class ProjectController extends Controller
     {
         $types = Type::all();
         $technologies = Technology::all();
-        return view('admin.projects.edit', compact('project', 'technologies', 'types'));
+        $project_technologies = $project->technologies->pluck('id')->toArray();
+
+        return view('admin.projects.edit', compact('project', 'technologies', 'types', 'project_technologies'));
     }
 
     /**
